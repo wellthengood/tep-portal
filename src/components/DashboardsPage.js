@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './DashboardsPage.css';
 
@@ -10,7 +10,7 @@ const dashboardsData = [
     link: '#',
     lastUpdated: '2024-03-20',
     status: 'Active',
-    icon: 'fas fa-clipboard-check'
+    icon: 'fas fa-clipboard-check fa-2x'
   },
   {
     title: 'NPE Executive Incident Dashboard',
@@ -19,7 +19,7 @@ const dashboardsData = [
     link: '#',
     lastUpdated: '2024-03-19',
     status: 'Active',
-    icon: 'fas fa-chart-pie'
+    icon: 'fas fa-chart-pie fa-2x'
   },
   {
     title: 'NPE Sanity Dashboard',
@@ -28,7 +28,7 @@ const dashboardsData = [
     link: '#',
     lastUpdated: '2024-03-20',
     status: 'Maintenance',
-    icon: 'fas fa-vial'
+    icon: 'fas fa-vial fa-2x'
   },
   {
     title: 'TDR Dashboard',
@@ -37,7 +37,7 @@ const dashboardsData = [
     link: '#',
     lastUpdated: '2024-03-18',
     status: 'Active',
-    icon: 'fas fa-database'
+    icon: 'fas fa-database fa-2x'
   }
 ];
 
@@ -45,9 +45,24 @@ const DashboardsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [labelFilter, setLabelFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const cardsRef = useRef([]);
+
+  useEffect(() => {
+    cardsRef.current = cardsRef.current.slice(0, dashboardsData.length);
+    
+    // Add animation to stagger card appearance
+    const cardElements = document.querySelectorAll('.dashboard-card');
+    cardElements.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 100 + (index * 100));
+    });
+  }, []);
 
   const filteredDashboards = dashboardsData.filter(dashboard => {
-    const matchesSearch = dashboard.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = dashboard.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          dashboard.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLabel = labelFilter === '' || dashboard.labels.some(label => 
       label.toLowerCase().includes(labelFilter.toLowerCase())
     );
@@ -99,9 +114,11 @@ const DashboardsPage = () => {
 
       <div className="dashboards-grid">
         {filteredDashboards.map((dashboard, index) => (
-          <a href={dashboard.link} key={index} className="dashboard-card">
+          <a href={dashboard.link} key={index} className="dashboard-card" ref={el => cardsRef.current[index] = el}>
             <div className="card-header">
-              <i className={`${dashboard.icon} card-icon`}></i>
+              <div className="card-icon-wrapper">
+                <i className={`${dashboard.icon} card-icon`}></i>
+              </div>
               <span className={`status-badge ${dashboard.status.toLowerCase()}`}>
                 {dashboard.status}
               </span>
