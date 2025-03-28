@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useFormContext } from '../contexts/FormContext';
 
-const Card = ({ icon, title, description, index }) => {
+const Card = ({ icon, title, description, index, onClick }) => {
   const cardRef = useRef();
   const { openRFCForm } = useFormContext();
   
@@ -34,7 +34,7 @@ const Card = ({ icon, title, description, index }) => {
   }, [index]);
   
   return (
-    <div className="card" ref={cardRef} style={{ animationDelay: `${index * 0.1}s` }}>
+    <div className="card" ref={cardRef} style={{ animationDelay: `${index * 0.1}s` }} onClick={onClick}>
       <div className="card-icon">
         <i className={icon}></i>
       </div>

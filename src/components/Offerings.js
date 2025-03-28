@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Card from './Card';
+import { useNavigate } from 'react-router-dom';
 
 const offeringsData = [
   {
@@ -37,6 +38,7 @@ const offeringsData = [
 const Offerings = () => {
   const sectionRef = useRef();
   const cardsRef = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     cardsRef.current = cardsRef.current.slice(0, offeringsData.length);
@@ -91,6 +93,12 @@ const Offerings = () => {
     };
   }, []);
 
+  const handleCardClick = (title) => {
+    if (title === 'Metrics & Reporting') {
+      navigate('/dashboards');
+    }
+  };
+
   return (
     <section className="offerings section" id="offerings" ref={sectionRef}>
       <div className="container">
@@ -110,6 +118,7 @@ const Offerings = () => {
                 title={offering.title}
                 description={offering.description}
                 index={index}
+                onClick={() => handleCardClick(offering.title)}
               />
             </div>
           ))}

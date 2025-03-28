@@ -8,8 +8,11 @@ import Footer from './components/Footer';
 import RFCExemptionForm from './components/RFCExemptionForm';
 import { FormProvider } from './contexts/FormContext';
 import './styles/styles.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DashboardsPage from './components/DashboardsPage';
 
-const AppContent = () => {
+// Create Home component
+const Home = () => {
   const { darkTheme } = useContext(ThemeContext);
   
   return (
@@ -30,7 +33,21 @@ function App() {
   return (
     <ThemeProvider>
       <FormProvider>
-        <AppContent />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route 
+              path="/dashboards" 
+              element={
+                <>
+                  <Header />
+                  <DashboardsPage />
+                  <Footer />
+                </>
+              } 
+            />
+          </Routes>
+        </Router>
       </FormProvider>
     </ThemeProvider>
   );
